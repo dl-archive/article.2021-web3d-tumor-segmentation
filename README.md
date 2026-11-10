@@ -29,13 +29,24 @@ DOI: [10.1145/3485444.3487640](https://doi.org/10.1145/3485444.3487640) · Autho
 ```
 
 The paper was compiled in October 2021 with pdfTeX 1.40.19 (TeX Live 2018), hence the TeX Live 2018 container.
-Pages 1–5 and 8 are reproduced pixel-identically, the text is identical throughout.
+On `main`, the build produces the revised version (`v1.1-revised`); check out `v1.0-camera-ready` for the camera-ready version.
+For `v1.0-camera-ready`, pages 1–5 and 8 are reproduced pixel-identically, the text is identical throughout.
 One difference remains on pages 6–7: in the camera-ready PDF, the caption of Listing 1 is set narrower (3 lines instead of 2), so the paragraph "The region growing itself operates …" moves from the right column above the listing, and the column ends on pages 6–7 shift by one or two lines.
 The Overleaf state these sources come from apparently differs from the camera-ready in the listing/caption setup; TeX Live 2018, 2019 and 2021 give the same result.
 
 ## Versions
 
 - [`v1.0-camera-ready`](https://github.com/dl-archive/article.2021-web3d-tumor-segmentation/tree/v1.0-camera-ready) – sources as submitted to ACM (2021-10-01)
+- [`v1.1-revised`](https://github.com/dl-archive/article.2021-web3d-tumor-segmentation/tree/v1.1-revised) – author's revised version (2026-11-10): grammar and typography fixes, see [Revisions](#revisions)
+
+## Revisions
+
+`v1.1-revised` (2026-11-10) corrects errors in the camera-ready version without changing its content or layout (layout identical to the `v1.0-camera-ready` build).
+Every page carries the note "Author's revised version (2026-11-10). Version of record: https://doi.org/10.1145/3485444.3487640".
+
+- Grammar and word choice: "the edges of a segmentation", "aspects of medical correctness", "auxiliary meshes like clipping planes", "in the 3D view, the user clicks", "using 8 bits", "added to or removed from the preview", "clean-up" (2×).
+- Typography: units upright with a thin space ("40 ms", "10–20 ms", "5 ms", "60 Hz", "4.50 GHz", "32 GB", "3000 MHz", "60 fps", "20 fps"); previously "ms" was set as a math variable.
+- ORCIDs of Paul Brachmann, Daniel Limberger and Christoph Lippert added (metadata).
 
 ## Citation
 

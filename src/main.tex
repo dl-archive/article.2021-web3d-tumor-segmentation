@@ -39,6 +39,9 @@
 \usepackage{csquotes}
 
 
+\usepackage{eso-pic}
+\AddToShipoutPictureFG{\AtPageLowerLeft{\put(\LenToUnit{0.5\paperwidth},\LenToUnit{6mm}){\makebox[0pt][c]{\fontsize{6.5}{8}\selectfont\color{gray}Author's revised version (2026-11-10). Version of record: https://doi.org/10.1145/3485444.3487640}}}}
+
 \begin{document}
 
 \title{Interactive Volumetric Region Growing for Brain Tumor Segmentation on MRI using WebGL}
@@ -53,6 +56,7 @@
 \email{jonas.kordt@student.hpi.de}
 
 \author{Paul Brachmann}
+\orcid{0009-0000-6653-2999}
 \affiliation{%
   \institution{Hasso Plattner Institute - University of Potsdam}
   \city{Potsdam}
@@ -62,6 +66,7 @@
 \email{paul.brachmann@hpi.de}
 
 \author{Daniel Limberger}
+\orcid{0000-0002-9111-4809}
 \affiliation{%
   \institution{Hasso Plattner Institute - University of Potsdam}
   \city{Potsdam}
@@ -71,6 +76,7 @@
 \email{daniel.limberger@hpi.de}
 
 \author{Christoph Lippert}
+\orcid{0000-0001-6363-2556}
 \affiliation{%
   \institution{Hasso Plattner Institute - University of Potsdam}
   \city{Potsdam}
@@ -80,7 +86,7 @@
 \email{christoph.lippert@hpi.de}
 
 \begin{abstract}
-Volumetric segmentation of medical images is an essential tool in treatment planning and many longitudinal studies. While machine learning approaches promise to fully automate it, they most often still depend on manually labeled training data. We thus present a GPU-based volumetric region growing approach for semi-automatic brain tumor segmentation that can be interactively tuned. Additionally, we propose multidimensional transfer functions for ray tracing that allow users to judge the quality of the grown region. Our implementation produces a full brain tumor segmentation within a few milliseconds on consumer hardware. The visualization uses adaptive resolution scaling and progressive, asynchronous shading computation to maintain a stable $60$ Hz refresh rate.
+Volumetric segmentation of medical images is an essential tool in treatment planning and many longitudinal studies. While machine learning approaches promise to fully automate it, they most often still depend on manually labeled training data. We thus present a GPU-based volumetric region growing approach for semi-automatic brain tumor segmentation that can be interactively tuned. Additionally, we propose multidimensional transfer functions for ray tracing that allow users to judge the quality of the grown region. Our implementation produces a full brain tumor segmentation within a few milliseconds on consumer hardware. The visualization uses adaptive resolution scaling and progressive, asynchronous shading computation to maintain a stable 60\,Hz refresh rate.
 \end{abstract}
 
 \begin{CCSXML}
@@ -161,7 +167,7 @@ Starting from one or more initial \enquote{seeds}, the region grows to its neigh
 The initial seeds can be set by the user~\cite{adams1994seeded} or automatically, based on heuristics~\cite{lin2000unseeded}.
 Another concept is \emph{watershed}~segmentation~\cite{vincent1991watershed}.
 The idea is to view grayscale images as a heightmap and simulate water settling in so-called \enquote{basins}.
-\emph{Level set} and \emph{active contour} segmentation are based on modeling the edges of an segmentation.
+\emph{Level set} and \emph{active contour} segmentation are based on modeling the edges of a segmentation.
 \emph{Level set} segmentation uses signed distance fields where the $0$-level is the border between segmentation and background.
 Similarly, \emph{active contour} segmentation represents the edges of the segmentation using a large number of nodes.
 Several surveys focus on how these techniques can be implemented on the GPU~\cite{eklund2013state_gpu, smistad2015state_gpu, hadwiger2004state_gpu}. Region growing, in particular, can be implemented on the GPU using a GPGPU approach such as Nvidia CUDA~\cite{kalaiselvi2017CUDA_reg_growing} or using shaders~\cite{schenke2005gpu_reg_growing}.
@@ -253,7 +259,7 @@ Due to this integration, a hybrid 2D and 3D workflow for segmentation becomes fe
 
 \section{Direct Volume Rendering}
 \label{dvr}
-In this section, we briefly describe the \emph{transfer functions} used in our volume rendering, discuss aspects on \emph{medical correctness} of the rendering itself, and highlight our \emph{progressive rendering} approach.
+In this section, we briefly describe the \emph{transfer functions} used in our volume rendering, discuss aspects of \emph{medical correctness} of the rendering itself, and highlight our \emph{progressive rendering} approach.
 
 \paragraph{Transfer Functions}
 To display MRIs and segmentation volumes in 3D, we provide multidimensional transfer functions, namely  $H_\textrm{dense}$, $H_\textrm{clip}$, $H_\textrm{edge}$, and $H_\textrm{user}$, used for ray tracing (more specifically, ray marching).
@@ -337,7 +343,7 @@ In the following, implementation details on \emph{ray tracing}, \emph{GPU-based 
 
 \paragraph{Ray Tracing}
 For the initial rays, the back faces of the volume's bounding box are rasterized and used for subsequent, custom ray marching through the MRI volume (utilizing fragment shaders for computation).
-This simplifies further composition of other auxiliary meshes like clipping plane (\cref{fig:plane}) or VR controllers rendered directly using Three.js.
+This simplifies further composition of other auxiliary meshes like clipping planes (\cref{fig:plane}) or VR controllers rendered directly using Three.js.
 To render multiple MRI scans and segmentations simultaneously, we use a stack of layers. 
 During ray marching, we blend the colors and opacities of all layers at every sample point along the rays according to the stack's layer sequence. 
 This allows the user to rearrange layers such that more important segmentations show up more dominantly when overlapping with other segmentations.
@@ -360,7 +366,7 @@ However, since WebGL 1 only allows constant array lengths for uniforms, we apply
 \end{figure*}
 
 \paragraph{3D Seed Selection}
-To place a seed for region growing in the 3D view the user clicks onto the rendered image.
+To place a seed for region growing in the 3D view, the user clicks onto the rendered image.
 To convert the 2D click position into the corresponding 3D position in the volume, volumetric GPU picking is used, rendering the volume again off screen with a modified shader.
 
 This modified shader does the same front-to-back ray marching and color accumulation as the normal volume shader.
@@ -387,9 +393,9 @@ The region growing itself iteratively runs on the GPU.
 We use two frame buffers and render back and forth between them by using them as alternating input and output.
 In each step, the region can grow one step. 
 As we are using a texture atlas instead of a 3D texture, we render the whole atlas at once.
-For this, we use a screen-aligned quad and a fragment shader to compute the region growing for each voxel (\cref{lst:regiongrowing}). The same procedure is also used to enable multi-step dilation/erosion for segmentation clean up.
+For this, we use a screen-aligned quad and a fragment shader to compute the region growing for each voxel (\cref{lst:regiongrowing}). The same procedure is also used to enable multi-step dilation/erosion for segmentation clean-up.
 
-To allow for interactive adjustment of the maximum region growing distance (\cref{fig:regiongrowing}), we encode the step in which a voxel first became part of the region using 8 bit in one of the texture's channels. 
+To allow for interactive adjustment of the maximum region growing distance (\cref{fig:regiongrowing}), we encode the step in which a voxel first became part of the region using 8 bits in one of the texture's channels. 
 Based on this value, we filter the preview using the user-controlled slider value. To render the preview, an additional annotation layer is placed on top of the layer stack.
 When applying the previewed segmentation to the existing one, we use the filter and render the voxels additively into the segmentation's texture atlas.
 Encoding the step number in 8 bits allows us to grow the region by 254 steps ($0$ is reserved for voxels not part of the region, and $255$ is the seed). 
@@ -399,7 +405,7 @@ For common scan resolutions used in brain tumor segmentation, 254 steps are typi
 
 The region growing itself operates on the raw MRI intensities. 
 It uses the selected seed's and the six neighboring voxels' intensities for thresholding when growing the region to adjacent voxels (see \cref{3d_seg} for the mathematical model and \cref{lst:regiongrowing} for an implementation in a GLSL fragment shader).
-Whenever the user changes the region growing distance, voxels are added or removed from the preview (\cref{fig:regiongrowing}) without recomputation. 
+Whenever the user changes the region growing distance, voxels are added to or removed from the preview (\cref{fig:regiongrowing}) without recomputation. 
 However, this means that the LAO for all voxels needs to be recomputed. 
 Since this is a computationally intensive operation, we momentarily turn off shading updates while the user changes the distance.
 
@@ -421,12 +427,12 @@ This process is repeated until a target number of LAO rays is reached (32 by def
 Our approach achieves an end-to-end 3D segmentation workflow that extends the 2D user interface of the image annotation system \emph{VISIAN} as seen in \cref{fig:visian2d}.
 
 \paragraph{Performance}
-We tested our implementation on a local development deployment of \emph{VISIAN} running in Chrome 92.0.4515.107 (64-bit) on a workstation equipped with an i7-7700K running at 4.50 GHz, 32 GB of 3000 MHz DDR4 RAM, an Nvidia GeForce RTX 2070 SUPER, and a 4K display.
+We tested our implementation on a local development deployment of \emph{VISIAN} running in Chrome 92.0.4515.107 (64-bit) on a workstation equipped with an i7-7700K running at 4.50\,GHz, 32\,GB of 3000\,MHz DDR4 RAM, an Nvidia GeForce RTX 2070 SUPER, and a 4K display.
 
-\Cref{tab:computationtimes} shows the computation times for all 254 region growing steps on a scan from the BraTS 2018 dataset~\cite{brats1,brats2,brats3} of resolution $240\times240\times155$, resulting in a texture atlas resolution of $3120\times2880$. As evident, the first run completed in just below $40 ms$ with precompiled shaders. In our tests, it took $10 - 20 ms$ longer if the required shaders had not been precompiled. Due to caching effects, the following consecutive region growing runs on the same scan completed in, on average, $5 ms$.
+\Cref{tab:computationtimes} shows the computation times for all 254 region growing steps on a scan from the BraTS 2018 dataset~\cite{brats1,brats2,brats3} of resolution $240\times240\times155$, resulting in a texture atlas resolution of $3120\times2880$. As evident, the first run completed in just below 40\,ms with precompiled shaders. In our tests, it took 10--20\,ms longer if the required shaders had not been precompiled. Due to caching effects, the following consecutive region growing runs on the same scan completed in, on average, 5\,ms.
 
-All proposed transfer functions produced stable 60 fps video output using our progressive rendering on the above hardware.
-Without our progressive resolution, the frame rate, depending on the zoom level, occasionally dropped to as low as 20 fps.
+All proposed transfer functions produced stable 60\,fps video output using our progressive rendering on the above hardware.
+Without our progressive resolution, the frame rate, depending on the zoom level, occasionally dropped to as low as 20\,fps.
 
 \begin{figure}[t]
     \begin{tikzpicture}[%
@@ -471,7 +477,7 @@ Volumetric region growing can support quick segmentation of 3D structures in med
 By allowing the user to interactively scale how far a region can grow, unintended over-growing can be mitigated.
 Another key to a successful 3D segmentation workflow is the tight integration of volumetric rendering with \emph{focus+context} visualizations into the segmentation process. 
 This way, users can judge the volumes they are annotating in 3D and spot errors more quickly and easily.
-Additionally, the 2D tools of a segmentation application such as \emph{VISIAN} can be used for effective clean up of grown regions.
+Additionally, the 2D tools of a segmentation application such as \emph{VISIAN} can be used for effective clean-up of grown regions.
 
 Our progressive rendering approach is essential to
 (1) maintain interactive frame rates on low-end devices while generating images of consistently high quality, %
