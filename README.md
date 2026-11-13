@@ -4,7 +4,7 @@ Jonas Kordt, [Paul Brachmann](https://orcid.org/0009-0000-6653-2999), [Daniel Li
 
 *Proceedings of the 26th International Conference on 3D Web Technology (Web3D '21)*, November 8–12, 2021, Pisa, Italy. ACM, pp. 2:1–8.
 
-[![Version of record: 10.1145/3485444.3487640](https://img.shields.io/badge/Version_of_record-10.1145%2F3485444.3487640-007ec6)](https://doi.org/10.1145/3485444.3487640) [![Author's version: 10.5281/zenodo.24101027](https://img.shields.io/badge/Author%27s_version-10.5281%2Fzenodo.24101027-007ec6)](https://doi.org/10.5281/zenodo.24101027) · [ResearchGate](https://www.researchgate.net/publication/356974519)
+[![Version of record: 10.1145/3485444.3487640](https://img.shields.io/badge/Version_of_record-10.1145%2F3485444.3487640-007ec6)](https://doi.org/10.1145/3485444.3487640) [![Author's version: 10.5281/zenodo.24101027](https://img.shields.io/badge/Author%27s_version-10.5281%2Fzenodo.24101027-007ec6)](https://doi.org/10.5281/zenodo.24101027) [![ResearchGate](https://img.shields.io/badge/ResearchGate-publication-00CCBB?logo=researchgate&logoColor=white)](https://www.researchgate.net/publication/356974519)
 
 > Volumetric segmentation of medical images is an essential tool in treatment planning and many longitudinal studies.
 > While machine learning approaches promise to fully automate it, they most often still depend on manually labeled training data.
